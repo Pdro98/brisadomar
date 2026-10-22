@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f8f9f6">
+    <meta name="description" content="Encontre sua próxima viagem com a Brisa do Mar Atlântico. Destinos especiais, atendimento próximo e reserva fácil pelo WhatsApp.">
+    <title>Brisa do Mar Atlântico | Viagens que ficam</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="#inicio" aria-label="Brisa do Mar Atlântico, início">
+        <img class="brand-logo" src="imagens/pngif.png" alt="Instituto Federal do Paraná">
+        <span class="brand-name">Brisa do Mar <strong>Atlântico</strong></span>
+      </a>
+      <nav class="main-nav" aria-label="Navegação principal">
+        <a href="#viagens">Viagens</a>
+        <a href="#sobre">Sobre nós</a>
+      </nav>
+      <button class="admin-trigger" id="open-admin" type="button">Área do administrador</button>
+    </header>
+
+    <main>
+      <section class="hero" id="inicio" aria-labelledby="hero-title">
+       
+        <div class="hero-content">
+          <p class="eyebrow"><span></span> O Atlântico espera por você</p>
+          <h1 id="hero-title"><span class="hero-title-line">Brisa do Mar</span><br><em>Atlântico</em></h1>
+          <p class="hero-copy">Dias mais leves começam com o destino certo. Descubra lugares especiais e reserve sua próxima viagem com quem conhece o caminho.</p>
+          <a class="button button-yellow" href="#viagens">Encontrar minha viagem <span aria-hidden="true">↗</span></a>
+        </div>
+        <div class="hero-trident" aria-hidden="true">
+          <img src="imagens/pngif.png" alt="">
+        </div>
+
+        
+      </section>
+
+      <section class="trips-section" id="viagens" aria-labelledby="trips-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow eyebrow-blue"><span></span> ESCOLHA SEU PRÓXIMO DESTINO</p>
+            <h2 id="trips-title">Viagens para <em>respirar fundo.</em></h2>
+          </div>
+          
+        </div>
+        <div class="trip-grid" id="trip-grid" aria-live="polite"></div>
+        <p class="trip-load-error" id="trip-load-error" role="alert" hidden></p>
+        <p class="empty-state" id="empty-state" hidden>Novos destinos estão chegando. Volte em breve.</p>
+      </section>
+
+      
+      <section class="team-section" aria-labelledby="team-title">
+        <div class="team-intro">
+          <p class="eyebrow"><span></span> CONTABILIDADE 3 - IFPR Campus Curitiba</p>
+          <h2 id="team-title">Criadoras do<em> Brisa do Mar.</em></h2>
+          <p>Conheça quem cuida de cada detalhe para você viajar com tranquilidade.</p>
+        </div>
+        <div class="team-carousel" aria-label="Carrossel de integrantes da equipe">
+          <div class="team-slide">
+            <div class="team-photo-frame">
+              <img class="team-photo" id="team-photo" src="imagens/WhatsApp%20Image%202026-10-21%20at%2022.27.52.jpeg" alt="Kaylla, integrante da equipe">
+              <span class="team-photo-decoration" aria-hidden="true"></span>
+            </div>
+            <h3 class="team-name" id="team-name">Kaylla</h3>
+          </div>
+          <div class="team-controls">
+            <span class="team-counter" id="team-counter" aria-live="polite">01 <span>/ 05</span></span>
+            <div class="team-arrows">
+              <button class="team-arrow" id="team-previous" type="button" aria-label="Ver integrante anterior">←</button>
+              <button class="team-arrow" id="team-next" type="button" aria-label="Ver próximo integrante">→</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <a class="brand brand-footer" href="#inicio">
+        <img class="brand-logo" src="imagens/pngif.png" alt="Instituto Federal do Paraná">
+        <span class="brand-name">Brisa do Mar <strong>Atlântico</strong></span>
+      </a>
+      <p>Desenvolvido por: Pedro Henrique Smek Glaba</p>
+      <span class="footer-copy">© <span id="current-year"></span> Brisa do Mar Atlântico</span>
+    </footer>
+
+    <dialog class="admin-dialog" id="admin-dialog" aria-labelledby="admin-title">
+      <div class="dialog-topline">
+        <div>
+          <p class="eyebrow eyebrow-blue"><span></span> PAINEL DO SITE</p>
+          <h2 id="admin-title">Área do administrador</h2>
+        </div>
+        <button class="close-button" id="close-admin" type="button" aria-label="Fechar painel">×</button>
+      </div>
+      <form class="login-form" id="login-form">
+        <p class="form-intro">Entre para publicar novos destinos e atualizar o contato de reservas.</p>
+        <label>E-mail<input name="email" type="email" autocomplete="username" required></label>
+        <label>Senha<input name="password" type="password" autocomplete="current-password" required></label>
+        <p class="login-error" id="login-error" role="alert" hidden>Usuário ou senha incorretos.</p>
+        <button class="button button-blue" type="submit">Entrar no painel <span aria-hidden="true">→</span></button>
+        <p class="demo-note">A conta de administrador deve ser criada no Supabase e autorizada na tabela de administradores.</p>
+      </form>
+      <section class="admin-panel" id="admin-panel" hidden>
+        <div class="admin-panel-heading">
+          <p>Gerencie os destinos exibidos na página inicial.</p>
+          <button class="logout-button" id="logout-admin" type="button">Sair</button>
+        </div>
+        <form class="trip-form" id="trip-form">
+          <h3>Adicionar destino</h3>
+          <label>Nome da viagem<input name="title" maxlength="70" placeholder="Ex.: Costa dos Corais" required></label>
+          <label>Descrição curta<textarea name="description" maxlength="180" rows="3" placeholder="Uma escapada entre piscinas naturais e vilas de pescadores." required></textarea></label>
+          <div class="form-row">
+            <label>Preço por pessoa (R$)<input name="price" type="number" min="1" step="0.01" placeholder="1890" required></label>
+            <label>Link da imagem (opcional)<input name="image" type="url" placeholder="https://..."></label>
+          </div>
+          <label>Ou escolha uma imagem do dispositivo<input name="imageFile" type="file" accept="image/*"></label>
+          <p class="image-help" id="image-help">Escolha um link ou envie uma imagem do celular/computador.</p>
+          <p class="trip-form-error" id="trip-form-error" role="alert" hidden></p>
+          <input name="tripId" type="hidden">
+          <div class="trip-form-actions">
+            <button class="button button-blue" id="trip-submit" type="submit">Publicar destino <span aria-hidden="true">+</span></button>
+            <button class="text-button" id="cancel-trip-edit" type="button" hidden>Cancelar edição</button>
+          </div>
+        </form>
+        <section class="admin-trips-management" aria-labelledby="admin-trips-title">
+          <h3 id="admin-trips-title">Destinos publicados</h3>
+          <p class="trip-form-error" id="admin-trips-error" role="alert" hidden></p>
+          <div class="admin-trip-list" id="admin-trip-list"></div>
+        </section>
+        <form class="settings-form" id="settings-form">
+          <h3>Contato de reservas</h3>
+          <label>WhatsApp comercial<input name="whatsapp" type="tel" inputmode="numeric" placeholder="5511999999999" aria-describedby="whatsapp-help"></label>
+          <p id="whatsapp-help">Inclua código do país e DDD, somente números.</p>
+          <button class="text-button" type="submit">Salvar contato</button>
+          <span class="settings-saved" id="settings-saved" role="status" hidden>Contato atualizado.</span>
+        </form>
+        <p class="storage-note" id="storage-note">As viagens e imagens serão compartilhadas entre dispositivos quando o Supabase estiver configurado.</p>
+      </section>
+    </dialog>
+  </body>
+</html>
