@@ -418,13 +418,25 @@ document.querySelector('#team-next').addEventListener('click', () => {
   showTeamMember(activeTeamMember + 1);
 });
 
-function reserveTrip(trip) {
-  const message = `Olá! Vim pelo site Brisa do Mar Atlântico e gostaria de reservar o ambiente ${trip.title}. Pode me passar mais informações?`;
+async function reserveTrip(trip) {
+  if (supabaseClient) {
+    try {
+      await refreshSettings();
+    } catch (error) {
+      window.alert(error.message);
+      return;
+    }
+  }
+
   const phone = (settingsCache.whatsapp || '').replace(/\D/g, '');
-  const url = phone
-    ? `https://wa.me/${phone}?text=${encodeURIComponent(message)}`
-    : `https://wa.me/?text=${encodeURIComponent(message)}`;
-  window.open(url, '_blank', 'noopener,noreferrer');
+  if (!phone) {
+    window.alert('O contato de WhatsApp ainda não foi configurado.');
+    return;
+  }
+
+  const message = `Olá! Vim pelo site Brisa do Mar Atlântico e gostaria de reservar a viagem ${trip.title}. Pode me passar mais informações?`;
+  const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+  window.location.assign(url);
 }
 
 function setAdminView(isLoggedIn) {
