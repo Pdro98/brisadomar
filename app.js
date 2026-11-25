@@ -142,7 +142,7 @@ async function refreshSettings() {
 }
 
 function formatPrice(value) {
-  return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(value);
+  return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
 }
 
 function formatCurrencyInput(value) {
@@ -257,7 +257,9 @@ function beginTripEdit(trip) {
   form.elements.tripId.value = trip.id;
   form.elements.title.value = trip.title;
   form.elements.description.value = trip.description;
-  form.elements.price.value = trip.price;
+  form.elements.price.value = formatCurrencyInput(
+    Math.round(Number(trip.price) * 100)
+  );
   form.elements.additionalDescription.value = trip.additionalDescription || '';
   form.elements.additionalPrice.value = formatCurrencyInput(
     Math.round((Number(trip.additionalPrice) || 0) * 100)
@@ -555,10 +557,12 @@ document.querySelector('#logout-admin').addEventListener('click', () => {
 
 document.querySelector('#cancel-trip-edit').addEventListener('click', resetTripForm);
 
-document.querySelector('#trip-form').elements.additionalPrice.addEventListener('input', (event) => {
-  const input = event.currentTarget;
-  input.value = formatCurrencyInput(input.value);
-  input.setSelectionRange(input.value.length, input.value.length);
+['price', 'additionalPrice'].forEach((fieldName) => {
+  document.querySelector('#trip-form').elements[fieldName].addEventListener('input', (event) => {
+    const input = event.currentTarget;
+    input.value = formatCurrencyInput(input.value);
+    input.setSelectionRange(input.value.length, input.value.length);
+  });
 });
 
 document.querySelector('#trip-form').addEventListener('submit', async (event) => {
@@ -571,8 +575,15 @@ document.querySelector('#trip-form').addEventListener('submit', async (event) =>
   const editingId = formData.get('tripId');
   const trips = getTrips();
   const existingTrip = editingId ? trips.find((trip) => trip.id === editingId) : null;
+  const price = parseCurrencyInput(formData.get('price'));
   errorMessage.hidden = true;
   errorMessage.textContent = '';
+
+  if (price <= 0) {
+    errorMessage.textContent = 'Informe um preço por pessoa maior que zero.';
+    errorMessage.hidden = false;
+    return;
+  }
 
   if (!imageFile.size && !imageUrl && !existingTrip) {
     errorMessage.textContent = 'Adicione um link ou escolha um arquivo de imagem.';
@@ -594,7 +605,7 @@ document.querySelector('#trip-form').addEventListener('submit', async (event) =>
     ...(editingId ? { id: editingId } : {}),
     title: formData.get('title').trim(),
     description: formData.get('description').trim(),
-    price: Number(formData.get('price')),
+    price,
     additionalDescription: formData.get('additionalDescription').trim(),
     additionalPrice: parseCurrencyInput(formData.get('additionalPrice')),
     image,

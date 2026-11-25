@@ -117,14 +117,14 @@
           <label>Nome da viagem<input name="title" maxlength="70" placeholder="Ex.: Costa dos Corais" required></label>
           <label>Descrição curta<textarea name="description" maxlength="180" rows="3" placeholder="Uma escapada entre piscinas naturais e vilas de pescadores." required></textarea></label>
           <div class="form-row">
-            <label>Preço por pessoa (R$)<input name="price" type="number" min="1" step="0.01" placeholder="1890" required></label>
+            <label>Preço por pessoa (R$)<input name="price" type="text" inputmode="numeric" autocomplete="off" placeholder="0,00" aria-describedby="currency-input-help" required></label>
             <label>Link da imagem (opcional)<input name="image" type="url" placeholder="https://..."></label>
           </div>
           <div class="form-row additional-fields">
             <label>Descrição do adicional (opcional)<input name="additionalDescription" maxlength="100" placeholder="Ex.: Quarto individual"></label>
-            <label>Valor do adicional (R$)<input name="additionalPrice" type="text" inputmode="numeric" autocomplete="off" placeholder="0,00" aria-describedby="additional-price-help"></label>
+            <label>Valor do adicional (R$)<input name="additionalPrice" type="text" inputmode="numeric" autocomplete="off" placeholder="0,00" aria-describedby="currency-input-help"></label>
           </div>
-          <p class="image-help" id="additional-price-help">Digite os números; os centavos e separadores são preenchidos automaticamente.</p>
+          <p class="image-help" id="currency-input-help">Digite os números; os centavos e separadores são preenchidos automaticamente.</p>
           <label>Ou escolha uma imagem do dispositivo<input name="imageFile" type="file" accept="image/*"></label>
           <p class="image-help" id="image-help">Escolha um link ou envie uma imagem do celular/computador.</p>
           <p class="trip-form-error" id="trip-form-error" role="alert" hidden></p>
