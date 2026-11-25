@@ -78,6 +78,8 @@ function fromSupabaseTrip(row) {
     title: row.title,
     description: row.description,
     price: Number(row.price),
+    additionalDescription: row.additional_description || '',
+    additionalPrice: Number(row.additional_price) || 0,
     image: row.image_url,
     tag: row.tag
   };
@@ -88,6 +90,8 @@ function toSupabaseTrip(trip) {
     title: trip.title,
     description: trip.description,
     price: trip.price,
+    additional_description: trip.additionalDescription || '',
+    additional_price: trip.additionalPrice || 0,
     image_url: trip.image,
     tag: trip.tag
   };
@@ -141,6 +145,20 @@ function formatPrice(value) {
   return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(value);
 }
 
+function formatCurrencyInput(value) {
+  const digits = String(value).replace(/\D/g, '').slice(0, 10);
+  if (!digits) return '';
+  return new Intl.NumberFormat('pt-BR', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  }).format(Number(digits) / 100);
+}
+
+function parseCurrencyInput(value) {
+  const digits = String(value).replace(/\D/g, '');
+  return digits ? Number(digits) / 100 : 0;
+}
+
 function safeImageSource(value) {
   if (typeof value !== 'string') return '';
   if (/^data:image\/(?:jpeg|png|webp);base64,/i.test(value)) return value;
@@ -189,6 +207,12 @@ function renderTrips() {
     const priceBlock = makeElement('div', 'trip-price-block');
     priceBlock.append(makeElement('span', 'trip-price-label', 'a partir de'));
     priceBlock.append(makeElement('span', 'trip-price', formatPrice(trip.price)));
+    if (Number(trip.additionalPrice) > 0) {
+      const additionalLabel = trip.additionalDescription
+        ? `${trip.additionalDescription}: `
+        : 'Adicional: ';
+      priceBlock.append(makeElement('span', 'trip-additional-price', `${additionalLabel}${formatPrice(trip.additionalPrice)}`));
+    }
     const reserveButton = makeElement('button', 'reserve-button', 'Reservar via WhatsApp');
     reserveButton.type = 'button';
     reserveButton.addEventListener('click', () => reserveTrip(trip));
@@ -208,6 +232,12 @@ function renderAdminTrips() {
     const details = makeElement('div', 'admin-trip-details');
     details.append(makeElement('strong', '', trip.title));
     details.append(makeElement('span', '', formatPrice(trip.price)));
+    if (Number(trip.additionalPrice) > 0) {
+      const additionalLabel = trip.additionalDescription
+        ? `${trip.additionalDescription}: `
+        : 'Adicional: ';
+      details.append(makeElement('span', '', `${additionalLabel}${formatPrice(trip.additionalPrice)}`));
+    }
 
     const actions = makeElement('div', 'admin-trip-actions');
     const editButton = makeElement('button', 'text-button', 'Editar');
@@ -228,6 +258,10 @@ function beginTripEdit(trip) {
   form.elements.title.value = trip.title;
   form.elements.description.value = trip.description;
   form.elements.price.value = trip.price;
+  form.elements.additionalDescription.value = trip.additionalDescription || '';
+  form.elements.additionalPrice.value = formatCurrencyInput(
+    Math.round((Number(trip.additionalPrice) || 0) * 100)
+  );
   form.elements.image.value = safeImageSource(trip.image).startsWith('data:') ? '' : safeImageSource(trip.image);
   form.elements.imageFile.value = '';
   document.querySelector('#trip-form h3').textContent = 'Editar destino';
@@ -521,6 +555,12 @@ document.querySelector('#logout-admin').addEventListener('click', () => {
 
 document.querySelector('#cancel-trip-edit').addEventListener('click', resetTripForm);
 
+document.querySelector('#trip-form').elements.additionalPrice.addEventListener('input', (event) => {
+  const input = event.currentTarget;
+  input.value = formatCurrencyInput(input.value);
+  input.setSelectionRange(input.value.length, input.value.length);
+});
+
 document.querySelector('#trip-form').addEventListener('submit', async (event) => {
   event.preventDefault();
   const form = event.currentTarget;
@@ -555,6 +595,8 @@ document.querySelector('#trip-form').addEventListener('submit', async (event) =>
     title: formData.get('title').trim(),
     description: formData.get('description').trim(),
     price: Number(formData.get('price')),
+    additionalDescription: formData.get('additionalDescription').trim(),
+    additionalPrice: parseCurrencyInput(formData.get('additionalPrice')),
     image,
     tag: existingTrip?.tag || 'Novo destino'
   };

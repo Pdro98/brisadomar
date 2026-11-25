@@ -75,6 +75,7 @@ a { color: inherit; text-decoration: none; }
 .trip-bottom { margin-top: 19px; padding-top: 15px; border-top: 1px solid #e8ece8; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
 .trip-price-label { display: block; color: var(--muted); font-size: 9px; text-transform: uppercase; letter-spacing: .6px; }
 .trip-price { display: block; margin-top: 3px; color: var(--ocean); font-size: 17px; font-weight: 700; }
+.trip-additional-price { display: block; margin-top: 4px; color: var(--ocean); font-size: 10px; line-height: 1.4; }
 .reserve-button { min-height: 38px; padding: 0 12px; border: 1px solid var(--blue); border-radius: 2px; background: transparent; color: var(--blue); font-size: 10px; font-weight: 700; cursor: pointer; }
 .reserve-button:hover { color: var(--white); background: var(--blue); }
 .empty-state { color: var(--muted); text-align: center; padding: 40px; }

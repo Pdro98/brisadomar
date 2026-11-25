@@ -17,3 +17,5 @@ O armazenamento anterior era `localStorage`, que é separado em cada navegador e
 6. Faça o deploy novamente no Vercel. As viagens agora serão carregadas do banco e alterações feitas por uma conta autorizada serão compartilhadas entre aparelhos.
 
 Na primeira entrada do administrador em cada aparelho, o site oferece importar viagens antigas personalizadas que ainda estejam no armazenamento local daquele aparelho. Isso pode recuperar a viagem cadastrada anteriormente no celular; os arquivos nunca foram enviados ao Vercel e só podem ser importados enquanto ainda estiverem disponíveis no navegador original.
+
+Se o projeto Supabase já estava configurado, execute novamente o conteúdo de `supabase-setup.sql` no **SQL Editor** para adicionar as colunas do valor e da descrição do adicional sem alterar as viagens existentes.
