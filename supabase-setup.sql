@@ -3,7 +3,7 @@ create extension if not exists pgcrypto;
 create table if not exists public.trips (
   id uuid primary key default gen_random_uuid(),
   title text not null,
-  description text not null,
+  description text not null default '',
   price numeric(10, 2) not null check (price > 0),
   additional_description text not null default '',
   additional_price numeric(10, 2) not null default 0 check (additional_price >= 0),
@@ -15,7 +15,9 @@ create table if not exists public.trips (
 
 alter table public.trips
   add column if not exists additional_description text not null default '',
-  add column if not exists additional_price numeric(10, 2) not null default 0;
+  add column if not exists additional_price numeric(10, 2) not null default 0,
+  alter column description set default '',
+  alter column description drop not null;
 
 create table if not exists public.site_settings (
   id text primary key check (id = 'main'),

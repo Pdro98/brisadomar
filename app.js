@@ -76,7 +76,7 @@ function fromSupabaseTrip(row) {
   return {
     id: row.id,
     title: row.title,
-    description: row.description,
+    description: row.description || '',
     price: Number(row.price),
     additionalDescription: row.additional_description || '',
     additionalPrice: Number(row.additional_price) || 0,
@@ -101,6 +101,20 @@ function showTripLoadError(message) {
   const error = document.querySelector('#trip-load-error');
   error.textContent = message;
   error.hidden = !message;
+}
+
+function getTripSaveErrorMessage(error) {
+  if (
+    error.code === 'PGRST204' ||
+    error.code === '42703' ||
+    /column .* does not exist|could not find .*column/i.test(error.message || '')
+  ) {
+    return 'O banco ainda não tem as colunas do adicional. Execute novamente o arquivo supabase-setup.sql no SQL Editor do Supabase.';
+  }
+  if (error.code === '42501') {
+    return 'Sua conta não tem permissão para salvar destinos. Confira se ela está cadastrada como administradora no Supabase.';
+  }
+  return `Não foi possível salvar o destino: ${error.message || 'erro desconhecido no Supabase.'}`;
 }
 
 async function refreshTrips() {
@@ -617,9 +631,9 @@ document.querySelector('#trip-form').addEventListener('submit', async (event) =>
       : supabaseClient.from('trips').insert(toSupabaseTrip(updatedTrip));
     const { data, error } = await query.select('*').single();
     if (error) {
-      errorMessage.textContent = 'Não foi possível salvar o destino. Confira a conexão e as permissões da conta.';
+      errorMessage.textContent = getTripSaveErrorMessage(error);
       errorMessage.hidden = false;
-      console.error('Falha ao salvar destino no Supabase:', error.message);
+      console.error('Falha ao salvar destino no Supabase:', error.code, error.message);
       return;
     }
     if (existingTrip) {
